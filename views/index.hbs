@@ -1,0 +1,77 @@
+<h1>Bird Records</h1>
+
+<div class="addNewSighting">
+    <h3>Add new bird</h3>
+
+    <div class="messages">
+        {{#each messages.error}}
+            <p class="error_msg">{{this}}</p>
+        {{/each}}
+    </div>
+
+
+    <form action="/" method="POST">
+        Name: <input name="name" type="text" required>
+        <br>
+        Description: <input name="description" type="text">
+        <br>
+        Average Eggs Laid: <input name="averageEggsLaid" type="number" min="1" max="50">
+        <br>
+        Threatened? <input name="threatened" type="checkbox">
+        <br>
+        Nest location: <input name="nestLocation" type="text">
+        <br>
+        Nest materials: <input name="nestMaterials" type="text">
+        <br>
+        Date seen: <input name="dateSeen" type="datetime-local">
+        <br>
+        <input name="addBird" type="submit" value="Add new sighting">
+        <br>
+    </form>
+
+</div>
+
+<div class="birdsSeen">
+    <h3>All sightings</h3>
+    <h4>Click a value to edit it, press Enter to save or Esc to quit</h4>
+
+    {{# each birds}}
+        <p>Name: <span id="name">{{this.name}}</span></p>
+        <p>Description: <span id="description">{{this.description}}</span></p>
+        <p>Average eggs laid: <span id="eggs">{{this.averageEggsLaid}}</span></p>
+        <p>Nest location: <span id="nest_location">{{this.nest.location}}</span></p>
+        <p>Nest materials: <span id="nest_materials">{{this.nest.materials}}</span></p>
+        {{#if this.threatened}}
+            <p>This bird is threatened</p>
+        {{/if}}
+        <p>Dates seen: {{this.dateSeen}}</p>
+        <ul>
+            {{#each this.datesSeen}}
+                <li>{{dateFormatter this}}</li>
+            {{else}}
+                <li>No sightings reported</li>
+            {{/each}}
+        </ul>
+
+    <p>Add new date seen</p>
+    <form action="/addDate" method="POST">
+        <input name="dateSeen" type="date">
+        <input name="_id" type="hidden" value="{{this._id}}">
+        <input name="name" type="hidden" value="{{this.name}}">
+        <input name="add" type="submit" value="Add new date">
+    </form>
+    <br>
+    <form action="/delete" method="POST">
+        <input name="_id" type="hidden" value="{{this._id}}">
+        <input name="name" type="hidden" value="{{this.name}}">
+        <input name="delete" type="submit" value="Delete entry">
+    </form>
+
+    {{else}}
+        <p>No bird records in the database</p>
+    {{/each}}
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/javascripts/update.js"></script>
